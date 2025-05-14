@@ -18,7 +18,7 @@ pub fn mouse_key_tracker(
     mut camera_movement: ResMut<MouseKeyTracker>,
     mouse_input: Res<ButtonInput<MouseButton>>,
     key_input: Res<ButtonInput<KeyCode>>,
-    mut mouse_motion: EventReader<MouseMotion>,
+    mut mouse_motion: EventReader<CursorMoved>,
     mut pinch_events: EventReader<PinchGesture>,
     mut scroll_events: EventReader<MouseWheel>,
     active_cam: Res<ActiveCameraData>,
@@ -35,7 +35,7 @@ pub fn mouse_key_tracker(
     };
 
     // Collect input deltas
-    let mouse_delta = mouse_motion.read().map(|event| event.delta).sum::<Vec2>();
+    let mouse_delta = mouse_motion.read().map(|event| event.delta.unwrap_or( Vec2::ZERO ) ).sum::<Vec2>();
 
     // Collect scroll events
     let scroll_events_vec: Vec<MouseWheel> = scroll_events.read().cloned().collect();
